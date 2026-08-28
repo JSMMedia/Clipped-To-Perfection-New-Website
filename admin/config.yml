@@ -1,0 +1,49 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# This points to your images folder
+media_folder: "images"
+public_folder: "/images"
+
+# Collections define what your client can edit
+collections:
+  # Gallery Images Management
+  - name: "gallery_images"
+    label: "Gallery Images"
+    label_singular: "Gallery Image"
+    folder: "images"
+    create: true
+    delete: true
+    extension: "jpg"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    fields:
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Image Title", name: "title", widget: "string", required: false}
+      - {label: "Category", name: "category", widget: "select", options: ["Lawn Care", "Landscaping", "Tree Service", "Hardscaping", "Before/After", "Team", "Other"], required: false}
+
+  # Site Content (Text that appears on pages)
+  - name: "site_content"
+    label: "Website Content"
+    files:
+      - label: "Home Page Content"
+        name: "home_content"
+        file: "content/home.yml"
+        create: true
+        fields:
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Professional Landscaping & Lawn Care Services"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "string", default: "Transform Your Outdoor Space in Central Florida"}
+          - {label: "About Section Title", name: "about_title", widget: "string", default: "Professional Landscaping & Property Maintenance in Central Florida"}
+          - {label: "About Section Paragraph 1", name: "about_para1", widget: "text"}
+          - {label: "About Section Paragraph 2", name: "about_para2", widget: "text"}
+          
+      - label: "Contact Information"
+        name: "contact_info"
+        file: "content/contact.yml"
+        create: true
+        fields:
+          - {label: "Phone Number", name: "phone", widget: "string", default: "(352) 212-5603"}
+          - {label: "Email", name: "email", widget: "string", default: "clippedtoperfectionllc@gmail.com"}
+          - {label: "Business Address", name: "address", widget: "text"}
+          - {label: "Service Areas", name: "service_areas", widget: "list", default: ["Lecanto", "Citrus County", "Ocala", "Marion County"]}

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Sitemap: https://clippedtoperfection.com/sitemap.xml
+
+# Block admin area
+Disallow: /admin/

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Clipped to Perfection | Our Work Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Muli:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Gallery Container - 2 Services Per Row */
+        .services-container {
+            padding: 80px 20px;
+            background: #f8f9fa;
+        }
+        
+        .services-container .container {
+            max-width: 1600px;
+        }
+        
+        .services-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            scroll-margin-top: 120px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        .service-header {
+            text-align: center;
+            margin-bottom: 30px;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .service-header h2 {
+            font-size: 28px;
+            color: #1e3a5f;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .service-header p {
+            font-size: 15px;
+            color: #666;
+        }
+        
+        /* Photo Grid - Consistent 3 Image Layout */
+        .service-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 250px);
+            gap: 15px;
+        }
+        
+        .gallery-photo {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gallery-photo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0);
+            transition: background 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .gallery-photo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .gallery-photo:hover::before {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .gallery-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Video styling for gallery */
+        .gallery-photo video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #000;
+        }
+        
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .lightbox.active {
+            display: flex;
+        }
+        
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: #1e3a5f;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10001;
+        }
+        
+        .lightbox-close:hover {
+            background: #5cb85c;
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            color: #1e3a5f;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10001;
+        }
+        
+        .lightbox-prev {
+            left: 40px;
+        }
+        
+        .lightbox-next {
+            right: 40px;
+        }
+        
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            background: #5cb85c;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.9);
+            color: #1e3a5f;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        
+        /* Featured Image - First image spans full left column */
+        .service-gallery-grid .gallery-photo:first-child {
+            grid-column: 1;
+            grid-row: 1 / 3;
+        }
+        
+        /* Second and third images stack on the right */
+        .service-gallery-grid .gallery-photo:nth-child(2) {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        
+        .service-gallery-grid .gallery-photo:nth-child(3) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        
+        /* Featured Landscaping Section - Full Width with 5 Large Photos */
+        .featured-service {
+            grid-column: 1 / -1;
+            margin-bottom: 50px;
+        }
+        
+        .featured-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 350px 350px;
+            gap: 20px;
+        }
+        
+        .featured-gallery-grid .gallery-photo:nth-child(1) {
+            grid-column: 1 / 3;
+            grid-row: 1;
+        }
+        
+        .featured-gallery-grid .gallery-photo:nth-child(2) {
+            grid-column: 3;
+            grid-row: 1;
+        }
+        
+        .featured-gallery-grid .gallery-photo:nth-child(3) {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        .featured-gallery-grid .gallery-photo:nth-child(4) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        
+        .featured-gallery-grid .gallery-photo:nth-child(5) {
+            grid-column: 3;
+            grid-row: 2;
+        }
+        
+        /* Before & After Section - Interactive Slider */
+        .before-after-section {
+            background: linear-gradient(135deg, rgba(30, 58, 95, 0.95) 0%, rgba(45, 122, 62, 0.95) 100%);
+            padding: 100px 0;
+            color: white;
+        }
+        
+        .before-after-section .container {
+            max-width: 1600px;
+        }
+        
+        .before-after-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .before-after-header h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .before-after-header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .transformations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .transformation-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        
+        .transformation-title {
+            background: white;
+            padding: 20px 25px;
+            color: #1e3a5f;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .transformation-title h3 {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+        }
+        
+        .transformation-title p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Before/After Slider */
+        .comparison-slider {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            cursor: ew-resize;
+        }
+        
+        .comparison-slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .before-image {
+            z-index: 1;
+        }
+        
+        .after-image {
+            z-index: 2;
+            clip-path: inset(0 0 0 50%);
+        }
+        
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: white;
+            z-index: 3;
+            cursor: ew-resize;
+            transform: translateX(-50%);
+        }
+        
+        .slider-handle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .slider-handle::after {
+            content: '\f337';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: #1e3a5f;
+            z-index: 1;
+            line-height: 1;
+            display: block;
+            width: auto;
+            height: auto;
+        }
+        
+        .slider-label {
+            position: absolute;
+            top: 20px;
+            padding: 8px 18px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            z-index: 4;
+            pointer-events: none;
+        }
+        
+        .slider-label.before {
+            left: 20px;
+            background: #1e3a5f;
+            color: white;
+        }
+        
+        .slider-label.after {
+            right: 20px;
+            background: #5cb85c;
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .services-row {  
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .featured-gallery-grid {
+                grid-template-rows: 300px 300px;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .services-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-gallery-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 250px 250px 250px;
+            }
+            
+            .featured-gallery-grid .gallery-photo:nth-child(1) {
+                grid-column: 1 / 3;
+                grid-row: 1;
+            }
+            
+            .featured-gallery-grid .gallery-photo:nth-child(2) {
+                grid-column: 1;
+                grid-row: 2;
+            }
+            
+            .featured-gallery-grid .gallery-photo:nth-child(3) {
+                grid-column: 2;
+                grid-row: 2;
+            }
+            
+            .featured-gallery-grid .gallery-photo:nth-child(4) {
+                grid-column: 1;
+                grid-row: 3;
+            }
+            
+            .featured-gallery-grid .gallery-photo:nth-child(5) {
+                grid-column: 2;
+                grid-row: 3;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .service-card {
+                padding: 25px;
+            }
+            
+            .service-gallery-grid {
+                grid-template-rows: 250px 150px 150px;
+                grid-template-columns: 1fr;
+            }
+            
+            .service-gallery-grid .gallery-photo:first-child {
+                grid-column: 1;
+                grid-row: 1;
+            }
+            
+            .service-gallery-grid .gallery-photo:nth-child(2) {
+                grid-column: 1;
+                grid-row: 2;
+            }
+            
+            .service-gallery-grid .gallery-photo:nth-child(3) {
+                grid-column: 1;
+                grid-row: 3;
+            }
+            
+            .transformations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .service-gallery-grid {
+                grid-template-rows: 220px 140px 140px;
+            }
+            
+            .service-header h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content" style="justify-content: center;">
+                <div class="top-bar-right" style="margin: 0;">
+                    <p class="call-now">CALL NOW! <a href="tel:3522125603">(352) 212-5603</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="logo.png" alt="Clipped to Perfection">
+                    </a>
+                </div>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav">
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
+                
+                <nav class="main-nav" id="primary-nav">
+                    <ul>
+                        <li><a href="index.html">HOME</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-trigger">SERVICES</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="gallery.html#lawn-care">Lawn Care & Maintenance</a></li>
+                                <li><a href="gallery.html#landscaping">Landscaping</a></li>
+                                <li><a href="gallery.html#tree-trimming">Tree Trimming & Pruning</a></li>
+                                <li><a href="gallery.html#sod-installation">Sod Installation</a></li>
+                                <li><a href="gallery.html#rock-mulch">Rock & Mulch Installation</a></li>
+                                <li><a href="gallery.html#yard-cleanups">Yard Cleanups</a></li>
+                                <li><a href="gallery.html#brush-clearing">Brush Clearing</a></li>
+                                <li><a href="gallery.html#debris-removal">Debris Removal</a></li>
+                                <li><a href="gallery.html#tractor-work">Tractor Work</a></li>
+                                <li><a href="gallery.html#irrigation">Irrigation Services</a></li>
+                                <li><a href="gallery.html#land-clearing">Land Clearing</a></li>
+                                <li><a href="gallery.html#hardscaping">Retaining Walls & Hardscaping</a></li>
+                                <li><a href="gallery.html#pressure-washing">Pressure Washing</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="gallery.html" class="active">GALLERY</a></li>
+                        <li><a href="contact.html">CONTACT US</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="header-cta">
+                    <a href="contact.html" class="btn-header">GET A FREE ESTIMATE</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Video Background -->
+    <section class="hero hero-no-overlay" style="position: relative; overflow: hidden; min-height: 400px; margin-top: -150px; padding-top: 475px; padding-bottom: 150px;">
+        <!-- Video Background (loads first, starts hidden) -->
+        <video id="hero-video" autoplay muted loop playsinline preload="auto" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 2; opacity: 0; transition: opacity 0.5s ease-in;">
+            <source src="images/brush-clearing-3.mp4" type="video/mp4">
+        </video>
+        <!-- Fallback Image (shows only while video loads) -->
+        <div id="hero-fallback" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/gallery-hero-fallback.webp') center center/cover; z-index: 1;"></div>
+        <!-- Dark Overlay (on top of video) -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 3;"></div>
+        <!-- Content (on top of everything) -->
+        <div class="hero-content" style="position: relative; z-index: 4;">
+            <h1>Our Work Gallery</h1>
+            <p><strong>Browse Our Projects by Service Category</strong></p>
+        </div>
+    </section>
+    
+    <script>
+        // Fade in video smoothly once it's ready to play
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('hero-video');
+            const fallback = document.getElementById('hero-fallback');
+            
+            // When video can play, fade it in and hide fallback
+            video.addEventListener('canplay', function() {
+                video.style.opacity = '1';
+                // Hide fallback after video fades in
+                setTimeout(() => {
+                    fallback.style.display = 'none';
+                }, 500);
+            }, { once: true });
+            
+            // Fallback: if video takes too long (2 seconds), just show it anyway
+            setTimeout(() => {
+                if (video.style.opacity === '0') {
+                    video.style.opacity = '1';
+                }
+            }, 2000);
+        });
+    </script>
+
+    <main>
+        <div class="services-container">
+            <div class="container">
+                <!-- Featured Section: Landscaping - Full Width with 5 Photos -->
+                <div class="services-row">
+                    <div id="landscaping" class="service-card featured-service">
+                        <div class="service-header">
+                            <h2>Landscaping</h2>
+                            <p>Complete landscape design and installation to transform your outdoor spaces</p>
+                        </div>
+                        <div class="featured-gallery-grid">
+                            <div class="gallery-photo"><img src="images/landscaping-1.webp" alt="Landscape Design"></div>
+                            <div class="gallery-photo"><img src="images/landscaping-2.webp" alt="Landscape Installation"></div>
+                            <div class="gallery-photo"><img src="images/landscaping-3.webp" alt="Garden Landscaping"></div>
+                            <div class="gallery-photo"><img src="images/image.webp" alt="Professional Landscaping"></div>
+                            <div class="gallery-photo"><img src="images/image1.webp" alt="Landscape Transformation"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 1: Lawn Care, Tree Trimming, Sod Installation -->
+                <div class="services-row">
+                    <div id="lawn-care" class="service-card">
+                        <div class="service-header">
+                            <h2>Lawn Care & Maintenance</h2>
+                            <p>Professional mowing, edging, and weekly lawn care</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/lawn-care-1.webp" alt="Lawn Care"></div>
+                            <div class="gallery-photo"><img src="images/lawn-care-2.webp" alt="Lawn Mowing"></div>
+                            <div class="gallery-photo"><img src="images/lawn-care-3.webp" alt="Lawn Maintenance"></div>
+                        </div>
+                    </div>
+
+                    <div id="tree-trimming" class="service-card">
+                        <div class="service-header">
+                            <h2>Tree Trimming & Pruning</h2>
+                            <p>Expert tree care and maintenance</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/tree-service-1.webp" alt="Tree Trimming"></div>
+                            <div class="gallery-photo"><img src="images/tree-service-2.webp" alt="Tree Pruning"></div>
+                            <div class="gallery-photo"><img src="images/tree-service-3.webp" alt="Palm Trimming"></div>
+                        </div>
+                    </div>
+
+                    <div id="sod-installation" class="service-card">
+                        <div class="service-header">
+                            <h2>Sod Installation</h2>
+                            <p>New lawn installation and sod replacement</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/sod-installation-1.webp" alt="Sod Installation"></div>
+                            <div class="gallery-photo"><img src="images/sod-installation-2.webp" alt="New Sod"></div>
+                            <div class="gallery-photo"><img src="images/sod-installation-3.webp" alt="Sod Laying"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Rock & Mulch, Yard Cleanups, Brush Clearing -->
+                <div class="services-row">
+                    <div id="rock-mulch" class="service-card">
+                        <div class="service-header">
+                            <h2>Rock & Mulch Installation</h2>
+                            <p>Decorative rock and mulch for landscape beds</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/rock-mulch-1.webp" alt="Rock Installation"></div>
+                            <div class="gallery-photo"><img src="images/rock-mulch-2.webp" alt="Mulch Beds"></div>
+                            <div class="gallery-photo"><img src="images/rock-mulch-3.webp" alt="Rock Landscaping"></div>
+                        </div>
+                    </div>
+
+                    <div id="yard-cleanups" class="service-card">
+                        <div class="service-header">
+                            <h2>Yard Cleanups</h2>
+                            <p>Spring and fall cleanup services</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/yard-cleanups-1.webp" alt="Yard Cleanup"></div>
+                            <div class="gallery-photo"><img src="images/yard-cleanups-2.webp" alt="Fall Cleanup"></div>
+                            <div class="gallery-photo"><img src="images/yard-cleanups-3.webp" alt="Spring Cleanup"></div>
+                        </div>
+                    </div>
+
+                    <div id="brush-clearing" class="service-card">
+                        <div class="service-header">
+                            <h2>Brush Clearing</h2>
+                            <p>Heavy brush and vegetation removal</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo">
+                                <video src="images/brush-clearing-3.mp4" muted loop playsinline></video>
+                            </div>
+                            <div class="gallery-photo"><img src="images/brush-clearing-1.webp" alt="Brush Clearing"></div>
+                            <div class="gallery-photo"><img src="images/brush-clearing-2.webp" alt="Vegetation Removal"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Debris Removal, Tractor Work, Irrigation -->
+                <div class="services-row">
+                    <div id="debris-removal" class="service-card">
+                        <div class="service-header">
+                            <h2>Debris Removal</h2>
+                            <p>Hauling and disposal of yard waste</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/debris-removal-1.webp" alt="Debris Removal"></div>
+                            <div class="gallery-photo"><img src="images/debris-removal-2.webp" alt="Waste Hauling"></div>
+                            <div class="gallery-photo"><img src="images/debris-removal-3.webp" alt="Yard Waste"></div>
+                        </div>
+                    </div>
+
+                    <div id="tractor-work" class="service-card">
+                        <div class="service-header">
+                            <h2>Tractor Work</h2>
+                            <p>Heavy equipment services for large properties</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/tractor-work-1.webp" alt="Tractor Work"></div>
+                            <div class="gallery-photo"><img src="images/tractor-work-2.webp" alt="Heavy Equipment"></div>
+                            <div class="gallery-photo"><img src="images/tractor-work-3.webp" alt="Site Work"></div>
+                        </div>
+                    </div>
+
+                    <div id="irrigation" class="service-card">
+                        <div class="service-header">
+                            <h2>Irrigation Services</h2>
+                            <p>System installation and maintenance</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/irrigation-1.webp" alt="Irrigation System"></div>
+                            <div class="gallery-photo"><img src="images/irrigation-2.webp" alt="Sprinkler Installation"></div>
+                            <div class="gallery-photo"><img src="images/irrigation-3.webp" alt="Irrigation Maintenance"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 4: Land Clearing, Hardscaping, Pressure Washing -->
+                <div class="services-row">
+                    <div id="land-clearing" class="service-card">
+                        <div class="service-header">
+                            <h2>Land Clearing</h2>
+                            <p>Site preparation and land development</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/land-clearing-1.webp" alt="Land Clearing"></div>
+                            <div class="gallery-photo"><img src="images/land-clearing-2.webp" alt="Site Clearing"></div>
+                            <div class="gallery-photo"><img src="images/land-clearing-3.webp" alt="Property Clearing"></div>
+                        </div>
+                    </div>
+
+                    <div id="hardscaping" class="service-card">
+                        <div class="service-header">
+                            <h2>Retaining Walls & Hardscaping</h2>
+                            <p>Durable outdoor structures and stonework</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/hardscaping-1.webp" alt="Retaining Wall"></div>
+                            <div class="gallery-photo"><img src="images/hardscaping-2.webp" alt="Hardscaping"></div>
+                            <div class="gallery-photo"><img src="images/hardscaping-3.webp" alt="Pavers"></div>
+                        </div>
+                    </div>
+
+                    <div id="pressure-washing" class="service-card">
+                        <div class="service-header">
+                            <h2>Pressure Washing</h2>
+                            <p>Power washing for driveways, patios, and more</p>
+                        </div>
+                        <div class="service-gallery-grid">
+                            <div class="gallery-photo"><img src="images/pressure-washing-1.webp" alt="Pressure Washing"></div>
+                            <div class="gallery-photo"><img src="images/pressure-washing-2.webp" alt="Power Washing"></div>
+                            <div class="gallery-photo"><img src="images/pressure-washing-3.webp" alt="Driveway Cleaning"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Before & After Transformations -->
+        <section id="before-after" class="before-after-section">
+            <div class="container">
+                <div class="before-after-header">
+                    <h2>Before & After Transformations</h2>
+                    <p>Drag the slider to see the dramatic improvements we've made to properties throughout Central Florida</p>
+                </div>
+                
+                <div class="transformations-grid">
+                    <div class="transformation-item">
+                        <div class="transformation-title">
+                            <h3>Commercial Landscaping</h3>
+                            <p>Professional landscape beds with fresh mulch and new plantings</p>
+                        </div>
+                        <div class="comparison-slider" data-slider="1">
+                            <img src="images/before-1.webp" alt="Before" class="before-image">
+                            <img src="images/after-1.webp" alt="After" class="after-image">
+                            <div class="slider-handle"></div>
+                            <div class="slider-label before">BEFORE</div>
+                            <div class="slider-label after">AFTER</div>
+                        </div>
+                    </div>
+
+                    <div class="transformation-item">
+                        <div class="transformation-title">
+                            <h3>Commercial Sod Installation</h3>
+                            <p>Professional lawn installation from bare ground</p>
+                        </div>
+                        <div class="comparison-slider" data-slider="2">
+                            <img src="images/before-2.webp" alt="Before" class="before-image">
+                            <img src="images/after-2.webp" alt="After" class="after-image">
+                            <div class="slider-handle"></div>
+                            <div class="slider-label before">BEFORE</div>
+                            <div class="slider-label after">AFTER</div>
+                        </div>
+                    </div>
+
+                    <div class="transformation-item">
+                        <div class="transformation-title">
+                            <h3>Mulching & Home Landscaping</h3>
+                            <p>Complete property transformation with new landscaping and mulch beds</p>
+                        </div>
+                        <div class="comparison-slider" data-slider="3">
+                            <img src="images/before-3.webp" alt="Before" class="before-image">
+                            <img src="images/after-3.webp" alt="After" class="after-image">
+                            <div class="slider-handle"></div>
+                            <div class="slider-label before">BEFORE</div>
+                            <div class="slider-label after">AFTER</div>
+                        </div>
+                    </div>
+
+                    <div class="transformation-item">
+                        <div class="transformation-title">
+                            <h3>Hardscaping & Paver Installation</h3>
+                            <p>Custom paver walkways and hardscape features</p>
+                        </div>
+                        <div class="comparison-slider" data-slider="4">
+                            <img src="images/before-4.webp" alt="Before" class="before-image">
+                            <img src="images/after-4.webp" alt="After" class="after-image">
+                            <div class="slider-handle"></div>
+                            <div class="slider-label before">BEFORE</div>
+                            <div class="slider-label after">AFTER</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- CTA -->
+        <section class="section section-gray">
+            <div class="container">
+                <div style="background: linear-gradient(135deg, #1e3a5f 0%, #2d7a3e 100%); padding: 60px 50px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
+                    <h2 style="color: white; font-size: 36px; margin-bottom: 20px;">Ready to Transform Your Property?</h2>
+                    <p style="color: rgba(255,255,255,0.95); font-size: 18px; margin-bottom: 35px;">Contact us today for a free estimate.</p>
+                    <a href="contact.html" style="background: #5cb85c; color: white; padding: 18px 45px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 18px; display: inline-block; box-shadow: 0 4px 15px rgba(92,184,92,0.3);">GET A FREE ESTIMATE</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Footer Content -->
+            <div class="footer-content">
+                <!-- Contact Info -->
+                <div>
+                    <h3 style="color: #5cb85c; margin-bottom: 25px; font-size: 24px;">Get In Touch</h3>
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 16px; margin-bottom: 5px; color: rgba(255,255,255,0.7);">Phone</p>
+                        <p style="font-size: 20px; margin: 0;"><a href="tel:3522125603" style="color: white; text-decoration: none; font-weight: 700;">(352) 212-5603</a></p>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <p style="font-size: 16px; margin-bottom: 5px; color: rgba(255,255,255,0.7);">Email</p>
+                        <p style="font-size: 18px; margin: 0;"><a href="mailto:clippedtoperfection@gmail.com" style="color: white; text-decoration: none;">clippedtoperfection@gmail.com</a></p>
+                    </div>
+                    <div>
+                        <p style="font-size: 16px; margin-bottom: 5px; color: rgba(255,255,255,0.7);">Address</p>
+                        <p style="font-size: 16px; margin: 0; line-height: 1.6;">1087 North Sloan Terrace<br>Lecanto, FL 34461</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 style="color: #5cb85c; margin-bottom: 25px; font-size: 24px;">Hours</h3>
+                    <p style="font-size: 18px; font-weight: 600; margin: 0 0 5px 0;">Monday - Friday</p>
+                    <p style="font-size: 16px; color: rgba(255,255,255,0.9); margin: 0 0 30px 0;">9:00 AM - 5:00 PM</p>
+                    
+                    <h3 style="color: #5cb85c; margin-bottom: 15px; font-size: 20px;">Service Areas</h3>
+                    <p style="font-size: 15px; line-height: 1.8; margin: 0; color: rgba(255,255,255,0.9);">
+                        Dade City • Spring Hill<br>
+                        Ocala • Lecanto<br>
+                        Crystal River • Inverness<br>
+                        & Surrounding Areas
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 style="color: #5cb85c; margin-bottom: 25px; font-size: 24px;">Quick Links</h3>
+                    <ul style="list-style: none; padding: 0; margin: 0 0 30px 0;">
+                        <li style="margin-bottom: 12px;"><a href="index.html" style="color: white; text-decoration: none; font-size: 16px;">Home</a></li>
+                        <li style="margin-bottom: 12px;"><a href="gallery.html" style="color: white; text-decoration: none; font-size: 16px;">Gallery</a></li>
+                        <li style="margin-bottom: 12px;"><a href="contact.html" style="color: white; text-decoration: none; font-size: 16px;">Contact Us</a></li>
+                    </ul>
+                    
+                    <a href="contact.html" style="background: #5cb85c; color: white; padding: 14px 30px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 16px; display: inline-block; transition: all 0.3s; box-shadow: 0 4px 15px rgba(92,184,92,0.3);">Get Free Estimate</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Clipped to Perfection. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Contact Button -->
+    <div class="floating-contact">
+        <button class="floating-btn" aria-label="Contact Us">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+        <div class="contact-popup">
+            <h3>Contact Us</h3>
+            <a href="tel:3522125603" class="call-btn">
+                <i class="fas fa-phone"></i>
+                <span>Call Now<br><strong>(352) 212-5603</strong></span>
+            </a>
+            <a href="mailto:clippedtoperfection@gmail.com" class="email-btn">
+                <i class="fas fa-envelope"></i>
+                <span>Email Us</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-prev" onclick="changeImage(-1)">&#10094;</button>
+        <button class="lightbox-next" onclick="changeImage(1)">&#10095;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="">
+        </div>
+        <div class="lightbox-counter" id="lightbox-counter"></div>
+    </div>
+
+    <script>
+        const floatingContact = document.querySelector('.floating-contact');
+        const floatingBtn = document.querySelector('.floating-btn');
+        const contactPopup = document.querySelector('.contact-popup');
+        
+        floatingBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            floatingContact.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!floatingContact.contains(e.target)) {
+                floatingContact.classList.remove('active');
+            }
+        });
+        
+        contactPopup.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Lightbox functionality
+        let currentServiceImages = [];
+        let currentImageIndex = 0;
+
+        // Add click handlers to all gallery photos
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            serviceCards.forEach(card => {
+                const photos = card.querySelectorAll('.gallery-photo img');
+                const photoArray = Array.from(photos).map(img => img.src);
+                
+                photos.forEach((img, index) => {
+                    img.parentElement.addEventListener('click', function() {
+                        openLightbox(photoArray, index);
+                    });
+                });
+                
+                // Handle video clicks - open in lightbox with first frame as image
+                const videos = card.querySelectorAll('.gallery-photo video');
+                videos.forEach(video => {
+                    const container = video.parentElement;
+                    
+                    // Make video clickable to open lightbox
+                    container.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        // Create a temporary image from video's current frame
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        canvas.getContext('2d').drawImage(video, 0, 0);
+                        const videoSrc = video.src;
+                        
+                        // Open video in lightbox
+                        openVideoLightbox(videoSrc);
+                    });
+                });
+            });
+            
+            // Intersection Observer for autoplay on scroll
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5 // Video must be 50% visible
+            };
+            
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    if (entry.isIntersecting) {
+                        video.play().catch(err => console.log('Autoplay prevented:', err));
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all videos
+            document.querySelectorAll('.gallery-photo video').forEach(video => {
+                videoObserver.observe(video);
+            });
+        });
+
+        function openLightbox(images, index) {
+            currentServiceImages = images;
+            currentImageIndex = index;
+            updateLightboxImage();
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function openVideoLightbox(videoSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxContent = lightbox.querySelector('.lightbox-content');
+            
+            // Hide image, show video
+            lightboxImg.style.display = 'none';
+            
+            // Remove existing video if any
+            const existingVideo = lightboxContent.querySelector('video');
+            if (existingVideo) {
+                existingVideo.remove();
+            }
+            
+            // Create video element for lightbox
+            const videoElement = document.createElement('video');
+            videoElement.src = videoSrc;
+            videoElement.controls = true;
+            videoElement.autoplay = true;
+            videoElement.loop = true;
+            videoElement.style.maxWidth = '100%';
+            videoElement.style.maxHeight = '90vh';
+            videoElement.style.borderRadius = '8px';
+            
+            lightboxContent.appendChild(videoElement);
+            
+            // Hide counter and navigation for video
+            document.getElementById('lightbox-counter').style.display = 'none';
+            document.querySelector('.lightbox-prev').style.display = 'none';
+            document.querySelector('.lightbox-next').style.display = 'none';
+            
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxContent = lightbox.querySelector('.lightbox-content');
+            
+            // Remove video if exists and restore image display
+            const videoElement = lightboxContent.querySelector('video');
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.remove();
+            }
+            
+            // Restore image display and controls
+            lightboxImg.style.display = 'block';
+            document.getElementById('lightbox-counter').style.display = 'block';
+            document.querySelector('.lightbox-prev').style.display = 'flex';
+            document.querySelector('.lightbox-next').style.display = 'flex';
+            
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            
+            if (currentImageIndex >= currentServiceImages.length) {
+                currentImageIndex = 0;
+            } else if (currentImageIndex < 0) {
+                currentImageIndex = currentServiceImages.length - 1;
+            }
+            
+            updateLightboxImage();
+        }
+
+        function updateLightboxImage() {
+            document.getElementById('lightbox-img').src = currentServiceImages[currentImageIndex];
+            document.getElementById('lightbox-counter').textContent = `${currentImageIndex + 1} / ${currentServiceImages.length}`;
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                changeImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeImage(1);
+            }
+        });
+
+        // Close lightbox when clicking background
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        // Before/After Slider functionality with sequential smooth auto-animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliders = document.querySelectorAll('.comparison-slider');
+            let currentAnimatingIndex = -1;
+            let allAnimationsComplete = false;
+            
+            sliders.forEach((slider, index) => {
+                const handle = slider.querySelector('.slider-handle');
+                const afterImage = slider.querySelector('.after-image');
+                let isDragging = false;
+                let hasAnimated = false;
+                
+                // Initialize ALL sliders at center (50%) position on load
+                handle.style.left = '50%';
+                afterImage.style.clipPath = 'inset(0 0 0 50%)';
+                
+                function updateSlider(x) {
+                    const rect = slider.getBoundingClientRect();
+                    let position = ((x - rect.left) / rect.width) * 100;
+                    position = Math.max(0, Math.min(100, position));
+                    
+                    handle.style.left = position + '%';
+                    afterImage.style.clipPath = `inset(0 0 0 ${position}%)`;
+                }
+                
+                function updateSliderByPercent(percent) {
+                    const position = Math.max(0, Math.min(100, percent));
+                    handle.style.left = position + '%';
+                    afterImage.style.clipPath = `inset(0 0 0 ${position}%)`;
+                }
+                
+                // Auto-animation: Center (50%) → Right (100%) → Left (0%) → Center (50%)
+                function autoAnimate() {
+                    if (hasAnimated) return;
+                    hasAnimated = true;
+                    currentAnimatingIndex = index;
+                    
+                    // Already at center (50%) from initialization
+                    
+                    // Add smooth transition with hardware acceleration
+                    handle.style.transition = 'left 1.2s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    afterImage.style.transition = 'clip-path 1.2s cubic-bezier(0.4, 0.0, 0.2, 1)';
+                    handle.style.willChange = 'left';
+                    afterImage.style.willChange = 'clip-path';
+                    
+                    // STEP 1: After 300ms, slide to RIGHT (100%) - showing BEFORE image
+                    setTimeout(() => {
+                        updateSliderByPercent(100);
+                    }, 300);
+                    
+                    // STEP 2: After 1700ms total, slide to LEFT (0%) - showing AFTER image
+                    setTimeout(() => {
+                        updateSliderByPercent(0);
+                    }, 1700);
+                    
+                    // STEP 3: After 3100ms total, move back to CENTER (50%)
+                    setTimeout(() => {
+                        updateSliderByPercent(50);
+                    }, 3100);
+                    
+                    // Clean up and start next animation
+                    setTimeout(() => {
+                        handle.style.transition = '';
+                        afterImage.style.transition = '';
+                        handle.style.willChange = '';
+                        afterImage.style.willChange = '';
+                        
+                        // Start next slider animation
+                        if (index < sliders.length - 1) {
+                            triggerAnimation(index + 1);
+                        } else {
+                            allAnimationsComplete = true;
+                            currentAnimatingIndex = -1;
+                        }
+                    }, 4500);
+                }
+                
+                // Store animation function for later trigger
+                slider.animationFunction = autoAnimate;
+                
+                function startDrag(e) {
+                    isDragging = true;
+                    e.preventDefault();
+                    // Remove transitions when user starts dragging
+                    handle.style.transition = '';
+                    afterImage.style.transition = '';
+                    handle.style.willChange = '';
+                    afterImage.style.willChange = '';
+                }
+                
+                function drag(e) {
+                    if (!isDragging) return;
+                    
+                    const x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                    updateSlider(x);
+                }
+                
+                function stopDrag() {
+                    isDragging = false;
+                }
+                
+                // Mouse events
+                handle.addEventListener('mousedown', startDrag);
+                slider.addEventListener('mousemove', drag);
+                slider.addEventListener('mouseup', stopDrag);
+                slider.addEventListener('mouseleave', stopDrag);
+                
+                // Touch events
+                handle.addEventListener('touchstart', startDrag);
+                slider.addEventListener('touchmove', drag);
+                slider.addEventListener('touchend', stopDrag);
+                
+                // Click anywhere on slider to position
+                slider.addEventListener('click', function(e) {
+                    if (!isDragging) {
+                        updateSlider(e.clientX);
+                    }
+                });
+            });
+            
+            // Function to trigger specific slider animation
+            function triggerAnimation(index) {
+                if (index >= 0 && index < sliders.length) {
+                    const slider = sliders[index];
+                    if (slider.animationFunction) {
+                        slider.animationFunction();
+                    }
+                }
+            }
+            
+            // Trigger first animation when first slider comes into view
+            const firstSlider = sliders[0];
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && currentAnimatingIndex === -1 && !allAnimationsComplete) {
+                        // Start the first animation
+                        setTimeout(() => {
+                            triggerAnimation(0);
+                        }, 500);
+                    }
+                });
+            }, {
+                threshold: 0.3 // Trigger when 30% visible
+            });
+            
+            if (firstSlider) {
+                observer.observe(firstSlider);
+            }
+        });
+    </script>
+    
+    <script>
+  (function () {
+    const header = document.querySelector('.header');
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.getElementById('primary-nav');
+
+    if (header && toggle && nav) {
+      toggle.addEventListener('click', () => {
+        const isOpen = header.classList.toggle('header--open');
+        toggle.setAttribute('aria-expanded', String(isOpen));
+      });
+    }
+
+    // Mobile dropdown support (tap Services to expand/collapse)
+    const dropdown = document.querySelector('.main-nav .dropdown');
+    if (dropdown) {
+      const trigger = dropdown.querySelector('.dropdown-trigger');
+      if (trigger) {
+        trigger.addEventListener('click', (e) => {
+          if (window.matchMedia('(max-width: 968px)').matches) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle the dropdown
+            dropdown.classList.toggle('dropdown--open');
+            const isOpen = dropdown.classList.contains('dropdown--open');
+            console.log('Dropdown toggled:', isOpen ? 'OPENED' : 'CLOSED');
+          }
+        });
+      }
+      
+      // Close dropdown when clicking outside on mobile
+      document.addEventListener('click', (e) => {
+        if (window.matchMedia('(max-width: 968px)').matches) {
+          if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('dropdown--open');
+          }
+        }
+      });
+    }
+  })();
+</script>
+</body>
+</html>
